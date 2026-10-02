@@ -1,0 +1,13 @@
+{
+  "background_color": "#ffffff",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "SGS Retro Pixel Snake 2",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "Retrosnake",
+  "start_url": "/",
+  "theme_color": "#ffffff",
+  "id": "sgs.retro.snake",
+  "description": "A classic retro pixel snake game."
+}

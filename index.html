@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>SGS Retro Snake 2 - Final V9 Perfect Banner Position</title>
+
+<!-- PWABuilder ও প্লে স্টোর প্যাকেজের জন্য জরুরি মেটা ট্যাগ -->
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#000000">
+<link rel="icon" type="image/png" href="icon-512.png">
+<link rel="apple-touch-icon" href="icon-512.png">
+
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
+body{margin:0;background:#000;color:#0ff;font-family:monospace;display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+.sgs-round{width:80px;height:80px;border-radius:50%;background:#000;border:3px solid #0ff;box-shadow:0 0 20px #0ff, inset 0 0 18px rgba(0,255,255,0.25);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;flex-shrink:0;}
+.sgs-round::before{content:'';position:absolute;inset:-2px;border-radius:50%;border:2px solid transparent;border-top-color:#ff0;border-bottom-color:#0ff;animation:spin 1.8s linear infinite;}
+.sgs-text-logo{font-size:30px;font-weight:900;color:#ff0;text-shadow:0 0 12px #ff0, 0 0 22px #ff0, 2px 0 #0ff;transform:skew(-6deg);letter-spacing:1px;z-index:2;}
+.sgs-mini-round{width:34px;height:34px;border-radius:50%;background:#000;border:2.5px solid #0ff;box-shadow:0 0 10px #0ff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#ff0;flex-shrink:0;}
+@keyframes spin{to{transform:rotate(360deg)}}
+#topBar{height:42px;display:flex;align-items:center;justify-content:space-between;background:#0a0a14;border-bottom:2px solid #ff007f;z-index:100;padding:0 10px;flex-shrink:0;}
+.page{display:none!important;width:100%;height:calc(100vh - 42px);flex-direction:column;align-items:center;overflow:hidden;padding:5px;background:#000;position:absolute;top:42px;left:0;}
+.page.active{display:flex!important;}
+.page-header{width:100%;max-width:360px;display:flex;align-items:center;justify-content:space-between;background:#151522;padding:8px 10px;border-radius:8px;border:1.5px solid #ff0;margin-bottom:6px;flex-shrink:0;}
+.close-x{background:#ff4444;color:#fff;border:none;width:28px;height:28px;border-radius:50%;font-weight:bold;cursor:pointer;font-size:14px;}
+.game-border-box{border:2.5px solid #ff007f;border-radius:10px;box-shadow:0 0 15px #ff007f;width:230px;height:230px;background:#05050a;overflow:hidden;flex-shrink:0;position:relative;margin-top:2px;}
+canvas{width:100%;height:100%;display:block;}
+
+.control-pad{margin-top:4px;display:grid;grid-template-columns:52px 52px 52px;grid-template-rows:52px 52px 52px;gap:2px;justify-content:center;flex-shrink:0;}
+.ctrl-btn{width:52px;height:52px;border-radius:50%;background:#1a1a2e;border:2.5px solid #0ff;color:#0ff;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+#okBtn{grid-column:2;grid-row:2;background:#2a2a00;color:#ff0;border-color:#ff0;font-size:12px;font-weight:bold}
+#upBtn{grid-column:2;grid-row:1} #leftBtn{grid-column:1;grid-row:2} #rightBtn{grid-column:3;grid-row:2} #downBtn{grid-column:2;grid-row:3}
+
+#bannerAd{position:fixed;bottom:38px;left:50%;transform:translateX(-50%);height:32px;background:#0a0a0a;border:1.5px solid #0ff;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:8.5px;width:92%;max-width:360px;z-index:99;color:#0ff;box-shadow:0 0 10px rgba(0,255,255,0.3);}
+
+#appDrawer{height:100%;width:0;position:fixed;z-index:2000;top:0;left:0;background:#0f0f1e;overflow:hidden;transition:0.35s;display:flex;flex-direction:column;box-shadow:6px 0 25px rgba(0,0,0,0.95);}
+.drawer-header{padding:12px;background:#1a1a2e;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #0ff;flex-shrink:0;}
+.drawer-body{flex:1;overflow-y:auto;padding:5px 0;}
+.drawer-item{padding:14px 16px;font-size:14px;color:#fff;display:flex;gap:12px;background:none;border:none;width:100%;text-align:left;border-bottom:1px solid #1e1e32;cursor:pointer;}
+.drawer-item.exit{color:#ff6666;border-top:2px solid #333;margin-top:12px;}
+.grid-container{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;width:100%;max-width:360px;overflow-y:auto;max-height:calc(100vh - 150px);padding:4px;}
+.shop-item,.level-item{background:#151522;border:2px solid #0ff;border-radius:10px;padding:10px;cursor:pointer;font-size:11px;color:#fff;text-align:center;min-height:70px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.locked{border-color:#ff4444;opacity:0.7}.unlocked{border-color:#00ff88}.active-skin{border-color:#ff0;box-shadow:0 0 12px #ff0;background:#222200}
+.menu-btn{background:#222;color:#ff0;border:1.5px solid #ff0;padding:8px;cursor:pointer;font-size:11px;font-weight:bold;border-radius:8px;width:100%;max-width:360px;margin-top:6px;flex-shrink:0;}
+#modalOverlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.88);z-index:3000;align-items:center;justify-content:center;}
+#modalOverlay.show{display:flex;}
+.modal-box{background:#151522;border:3px solid #ff0;padding:18px;width:310px;border-radius:14px;color:#fff;text-align:center;}
+.coin-ad-btn{width:100%;max-width:360px;padding:10px;margin:4px 0;border-radius:8px;font-weight:bold;cursor:pointer;border:1.5px solid #00ff88;color:#fff;font-size:11px;}
+#loadingScreen{position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle,#1a1a2a,#000);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+#loadingBarBox{width:260px;height:14px;background:#222;border:1.5px solid #0ff;margin-top:16px;border-radius:7px;overflow:hidden}
+#loadingBar{width:0%;height:100%;background:linear-gradient(90deg,#0ff,#ff0);transition:width 0.2s}
+</style>
+</head>
+<body>
+
+<div id="loadingScreen">
+  <div class="sgs-round"><span class="sgs-text-logo">SGS</span></div>
+  <div style="font-size:22px;color:#ff0;font-weight:bold;margin-top:14px;text-shadow:0 0 12px #ff0;">RETRO PIXEL SNAKE 2</div>
+  <div style="font-size:10px;color:#0ff;margin-top:5px;letter-spacing:2px;">SGS • LEVELS 11-25 • PERFECT UI</div>
+  <div id="loadingBarBox"><div id="loadingBar"></div></div>
+  <div id="loadingText" style="margin-top:10px;font-size:11px;color:#aaa">Loading 0%</div>
+  <div style="margin-top:15px;line-height:1.5">
+    <div style="font-size:12px;color:#ff0;font-weight:bold;">Developer: Habibur Rahman</div>
+    <div style="font-size:11px;color:#00ff88;">Game Changer By Sadia Studio</div>
+  </div>
+</div>
+
+<div id="appDrawer">
+  <div class="drawer-header">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div class="sgs-mini-round">SGS</div>
+      <div><div style="font-size:13px;font-weight:bold;color:#ff0;">SGS Game Changer</div><div style="font-size:9px;color:#0ff;">By Sadia Studio</div></div>
+    </div>
+    <button class="close-x" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="drawer-body">
+    <button class="drawer-item" onclick="openPage('gameArea')">🎮 Game Play</button>
+    <button class="drawer-item" onclick="openPage('levelPage')">🏆 Levels 11-25 Permanent</button>
+    <button class="drawer-item" onclick="openPage('snakeShop')">🐍 Snake Skins</button>
+    <button class="drawer-item" onclick="openPage('coinShop')">🍎 Food Colors</button>
+    <button class="drawer-item" onclick="openPage('coinPage')">📺 Free Coins Shop</button>
+    <button class="drawer-item" onclick="openPage('settingsPage')">⚙️ Settings - Speed</button>
+    <button class="drawer-item" onclick="openPage('aboutPage')">ℹ️ About SGS</button>
+    <button class="drawer-item" onclick="openPage('contactPage')">📞 Contact SGS</button>
+    <button class="drawer-item" onclick="openPage('ratingPage')">⭐ Rate 5 Stars</button>
+    <button class="drawer-item exit" onclick="exitApp()">🚪 Exit Game</button>
+  </div>
+</div>
+
+<div id="topBar">
+  <button onclick="openDrawer()" style="background:#222;color:#ff0;border:1.5px solid #ff0;padding:4px 8px;font-weight:bold;border-radius:5px;font-size:10px;">☰ MENU</button>
+  <b style="color:#ff0;font-size:11px;" id="topLevelText">SGS Lvl 11</b>
+  <span id="coinCount" style="color:#0ff;font-size:10px;">Coins:0</span>
+</div>
+
+<div id="gameArea" class="page active">
+  <div style="font-size:9px;margin-bottom:2px;color:#aaa;">Best: <span id="bestText" style="color:#0ff">0</span> | Speed: <span id="speedText" style="color:#ff0">120ms</span> | <span id="deathText" style="color:#ff8888">Death:0/3</span></div>
+  <div class="game-border-box"><canvas id="gameCanvas" width="300" height="300"></canvas></div>
+  <div class="control-pad">
+    <button class="ctrl-btn" id="upBtn" onclick="changeDir('UP')">⬆️</button>
+    <button class="ctrl-btn" id="leftBtn" onclick="changeDir('LEFT')">⬅️</button>
+    <button class="ctrl-btn" id="okBtn" onclick="togglePause()">OK</button>
+    <button class="ctrl-btn" id="rightBtn" onclick="changeDir('RIGHT')">➡️</button>
+    <button class="ctrl-btn" id="downBtn" onclick="changeDir('DOWN')">⬇️</button>
+  </div>
+  <div id="bannerAd">SGS Banner Ad | ca-app-pub-3940256099942544/6300978111</div>
+</div>
+
+<div id="levelPage" class="page"><div class="page-header"><h3>SGS Levels Permanent</h3><button class="close-x" onclick="openPage('gameArea')">✕</button></div><div class="grid-container" id="levelGrid"></div><button class="menu-btn" onclick="openPage('gameArea')">Back to Game</button></div>
+<div id="snakeShop" class="page"><div class="page-header"><h3>Snake Skins</h3><button class="close-x" onclick="openPage('gameArea')">✕</button></div><div class="grid-container" id="snakeGrid"></div><button class="menu-btn" onclick="openPage('gameArea')">Back</button></div>
+<div id="coinShop" class="page"><div class="page-header"><h3>Food Colors</h3><button class="close-x" onclick="openPage('gameArea')">✕</button></div><div class="grid-container" id="foodGrid"></div><button class="menu-btn" onclick="openPage('gameArea')">Back</button></div>
+<div id="coinPage" class="page"><div class="page-header"><h3>Free Coins - Watch Ad</h3><button class="close-x" onclick="openPage('gameArea')">✕</button></div><button class="coin-ad-btn" onclick="watchAdForCoins(200)" style="background:#1a5c2a;">📺 Ad - 200 Coins</button><button class="coin-ad-btn" onclick="watchAdForCoins(300)" style="background:#2a6a1a;">📺 Ad - 300 Coins</button><button class="coin-ad-btn" onclick="watchAdForCoins(500)" style="background:#00aa55;">📺 Ad - 500 Coins</button><button class="coin-ad-btn" onclick="watchAdForCoins(1000)" style="background:#aa8800;border-color:#ff0;">📺 Ad - 1000 Bonus</button><button class="menu-btn" onclick="openPage('gameArea')">Back</button></div>
+<div id="settingsPage" class="page"><div class="page-header"><h3>Settings - Speed</h3><button class="close-x" onclick="openPage('gameArea')">✕</button></div><div style="background:#151522;border:1px solid #0ff;padding:12px;border-radius:8px;width:100%;max-width:360px;color:#fff;font-size:11px;line-height:1.6">SGS Fixed UI ✓<br>Banner Position Perfectized!<br>Speed: Lvl11 (120ms) to Lvl25 (70ms).</div><button class="menu-btn" onclick="openPage('gameArea')">Back</button></div>
+<div id="aboutPage" class="page"><div class="page-header"><h3>About SGS</h3><button class="close-x" onclick="openPage('gameArea')">✕</button></div><div style="background:#151522;border:1.5px solid #ff0;padding:14px;border-radius:10px;width:100%;max-width:360px;text-align:center;color:#fff;"><div class="sgs-round" style="margin:0 auto 8px auto;"><span class="sgs-text-logo">SGS</span></div><b>SGS Game Changer By Sadia Studio</b><br>Developer: Habibur Rahman<br>All Ages 3+</div><button class="menu-btn" onclick="openPage('gameArea')">Back</button></div>
+<div id="contactPage" class="page"><div class="page-header"><h3>Contact SGS</h3><button class="close-x" onclick="openPage('gameArea')">✕</button></div><div style="background:#151522;border:2px solid #00ff88;padding:14px;border-radius:10px;width:100%;max-width:360px;text-align:center;color:#fff;"><div class="sgs-round" style="margin:0 auto;"><span class="sgs-text-logo">SGS</span></div><div style="margin-top:8px;color:#ff0;font-weight:bold;">SGS Game Changer By Sadia Studio</div></div><button class="menu-btn" onclick="openPage('gameArea')">Back</button></div>
+
+<div id="ratingPage" class="page">
+  <div class="page-header"><h3>Rating SGS</h3><button class="close-x" onclick="openPage('gameArea')">✕</button></div>
+  <div style="background:#151522;border:1.5px solid #ff0;padding:16px;border-radius:10px;width:100%;max-width:360px;text-align:center;">
+    <div style="font-size:24px;">⭐⭐⭐⭐⭐</div>
+    <p style="font-size:11px;color:#aaa;margin:8px 0;">Rate our game on Google Play Store!</p>
+    <button class="menu-btn" style="background:#ff0;color:#000;" onclick="window.open('https://play.google.com/store/apps/details?id=com.sgs.retropixelsnake2', '_blank')">Rate SGS on Play Store ⭐</button>
+  </div>
+  <button class="menu-btn" onclick="openPage('gameArea')">Back</button>
+</div>
+
+<div id="modalOverlay"><div class="modal-box"><h3 id="modalTitle" style="color:#ff0;margin:0 0 10px 0">Notice</h3><p id="modalDesc" style="font-size:12px;margin:8px 0 16px 0;white-space:pre-line;"></p><button class="menu-btn" id="modalActionBtn" style="background:#0ff;color:#000;margin:0;">Confirm</button><button class="menu-btn" id="modalCancelBtn" style="background:#ff4444;color:#fff;">Cancel</button></div></div>
+
+<script>
+let audioCtx; function initAudio(){try{audioCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}}
+function playEatSound(){try{if(!audioCtx)initAudio();if(!audioCtx)return;let o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='square';o.frequency.setValueAtTime(800,audioCtx.currentTime);o.frequency.exponentialRampToValueAtTime(1300,audioCtx.currentTime+0.08);g.gain.setValueAtTime(0.35,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(0.01,audioCtx.currentTime+0.15);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+0.15);if(navigator.vibrate)navigator.vibrate(35);}catch(e){}}
+function playGameOverSound(){try{if(!audioCtx)initAudio();if(!audioCtx)return;let o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sawtooth';o.frequency.setValueAtTime(320,audioCtx.currentTime);o.frequency.linearRampToValueAtTime(70,audioCtx.currentTime+0.45);g.gain.setValueAtTime(0.3,audioCtx.currentTime);g.gain.linearRampToValueAtTime(0.01,audioCtx.currentTime+0.45);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+0.45);if(navigator.vibrate)navigator.vibrate([80,40,80]);}catch(e){}}
+
+let coins=parseInt(localStorage.getItem("game_coins"))||1100;
+let activeLevel=parseInt(localStorage.getItem("active_level_part2"))||11;
+let activeSnakeSkin=localStorage.getItem("active_snake")||"Green";
+let activeFoodSkin=localStorage.getItem("active_food")||"White";
+let gameOverCount=parseInt(localStorage.getItem("game_over_count"))||0;
+let levelGoals={11:500,12:800,13:1200,14:2000,15:3500,16:5500,17:8000,18:11500,19:15500,20:21000,21:25000,22:30000,23:35000,24:40000,25:50000};
+let permanentPrices={11:0,12:5000,13:8000,14:12000,15:18000,16:25000,17:35000,18:45000,19:55000,20:65000,21:75000,22:85000,23:90000,24:95000,25:100000};
+let levelSpeeds={11:120,12:115,13:110,14:105,15:100,16:95,17:92,18:88,19:85,20:82,21:80,22:78,23:76,24:74,25:70};
+
+let lp=0; let li=setInterval(()=>{lp+=Math.random()*22; if(lp>=100){lp=100;clearInterval(li);setTimeout(()=>document.getElementById("loadingScreen").style.display="none",700);} document.getElementById("loadingBar").style.width=lp+"%"; document.getElementById("loadingText").innerText="Loading "+Math.floor(lp)+"%";},130);
+
+function updateUI(){
+  let speed=levelSpeeds[activeLevel]||120;
+  document.getElementById("coinCount").innerText="Coins:"+coins;
+  document.getElementById("topLevelText").innerText="SGS Lvl "+activeLevel+" ("+speed+"ms)";
+  let best=localStorage.getItem("level_"+activeLevel+"_best")||0;
+  document.getElementById("bestText").innerText=best+"/"+levelGoals[activeLevel];
+  document.getElementById("speedText").innerText=speed+"ms";
+  document.getElementById("deathText").innerText="Death:"+(gameOverCount%3)+"/3";
+  localStorage.setItem("game_coins",coins);
+}
+
+function openDrawer(){
+  if(!paused && started && !over){
+    paused=true;
+    document.getElementById("okBtn").innerText="OK";
+  }
+  document.getElementById("appDrawer").style.width="280px";
+}
+
+function closeDrawer(){document.getElementById("appDrawer").style.width="0";}
+
+function openPage(id){
+  closeDrawer();
+  closeModal();
+  if(!paused && started && !over && id !== 'gameArea'){
+    paused=true;
+    document.getElementById("okBtn").innerText="OK";
+  }
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id==='levelPage')renderLevels();
+  if(id==='snakeShop')renderSnakeShop();
+  if(id==='coinShop')renderFoodShop();
+}
+
+function exitApp(){if(confirm("Exit SGS Game?")){try{window.close();}catch(e){alert("Press back");}}}
+function showRewardedAd(cb){alert("📺 SGS REWARDED Ad...\n(In APK Real Ad)");setTimeout(cb,600);}
+function watchAdForCoins(a){showModal("Free "+a+" Coins", `Watch ad to earn ${a} coins?\nYou have: ${coins}`, ()=>{showRewardedAd(()=>{coins+=a;updateUI();closeModal();playEatSound();});}, "Cancel");}
+
+function renderLevels(){
+  let g=document.getElementById("levelGrid"); g.innerHTML="";
+  for(let i=11;i<=25;i++){
+    let key="level_"+i; let unlocked=(i===11)||localStorage.getItem(key+"_unlocked")==="true";
+    let prevBest=parseInt(localStorage.getItem("level_"+(i-1)+"_best")||"0");
+    let need=levelGoals[i-1]||0; let canUnlock=(i===11)||(prevBest>=need);
+    let price=permanentPrices[i]; let speed=levelSpeeds[i];
+    let div=document.createElement("div"); div.className=`level-item ${unlocked?'unlocked':'locked'} ${activeLevel===i?'active-skin':''}`;
+    if(!unlocked &&!canUnlock){div.innerHTML=`<b>Lvl ${i}</b><br>🔒 Locked<br><span style="font-size:7px">Need ${need}<br>🪙 ${price/1000}k</span>`;}
+    else if(unlocked){div.innerHTML=`<b>Lvl ${i}</b><br>✓ Permanent<br><span style="font-size:7px">Goal:${levelGoals[i]}<br>⏱️${speed}ms</span>`;}
+    else{div.innerHTML=`<b>Lvl ${i}</b><br>🪙 ${price/1000}k<br><span style="font-size:7px">Perma<br>⏱️${speed}ms</span>`;}
+    div.onclick=()=>{
+      if(unlocked){ activeLevel=i; localStorage.setItem("active_level_part2",i); updateUI(); startGameLoop(); openPage('gameArea'); restartGame(); }
+      else if(!canUnlock){alert(`Need ${need} score in Lvl ${i-1}. You have ${prevBest}.`);}
+      else{
+        showModal(`Buy Lvl ${i} Permanent?`, `Price: ${price} Coins\nSpeed: ${speed}ms\nYour Coins: ${coins}`, ()=>{
+          if(coins<price){alert(`Need ${price} coins!`); openPage('coinPage'); return;}
+          coins-=price; localStorage.setItem(key+"_unlocked","true");
+          updateUI(); closeModal(); renderLevels(); playEatSound();
+          activeLevel=i; localStorage.setItem("active_level_part2",i); startGameLoop(); openPage('gameArea'); restartGame();
+        }, "Cancel");
+      }
+    }; g.appendChild(div);
+  }
+}
+
+let snakeList=[{name:"Green",price:0,days:0,type:'free',color:"#00ff88"},{name:"Red",price:0,days:2,type:'ad',color:"#ff4444"},{name:"Blue",price:0,days:3,type:'ad',color:"#4488ff"},{name:"Gold",price:500,days:5,type:'coin_ad',color:"#ffd700"},{name:"Diamond",price:50000,days:9999,type:'perm',color:"#fff"}];
+let foodList=[{name:"White",price:0,days:0,type:'free',color:"#fff"},{name:"Blue",price:0,days:2,type:'ad',color:"#00f"},{name:"Red",price:0,days:3,type:'ad',color:"#f00"},{name:"Gold",price:500,days:5,type:'coin_ad',color:"#ffd700"},{name:"Diamond",price:100000,days:9999,type:'perm',color:"#0f8"}];
+function getDaysLeft(k){let e=localStorage.getItem(k+"_expire");if(!e)return null;let d=parseInt(e)-Date.now();if(d<=0)return 0;return Math.ceil(d/86400000);}
+function renderSnakeShop(){let g=document.getElementById("snakeGrid");g.innerHTML="";snakeList.forEach(s=>{let k=s.name+"_snake";let u=(s.type==='free')||localStorage.getItem(k+"_unlocked")==="true";let dl=getDaysLeft(k);let d=document.createElement("div");d.className=`shop-item ${u?'unlocked':'locked'} ${activeSnakeSkin===s.name?'active-skin':''}`;d.innerHTML=`<div style="width:18px;height:18px;background:${s.color};border-radius:50%;border:2px solid #000;margin:0 auto 3px auto;"></div><b>${s.name}</b><br>${u?(dl?dl+'d':'Owned'):(s.type==='perm'?'50k':s.days+'d')}`;d.onclick=()=>{if(u){activeSnakeSkin=s.name;localStorage.setItem("active_snake",s.name);updateUI();renderSnakeShop();}else handleShopPurchase(s,k,()=>renderSnakeShop());};g.appendChild(d);});}
+function renderFoodShop(){let g=document.getElementById("foodGrid");g.innerHTML="";foodList.forEach(f=>{let k=f.name+"_food";let u=(f.type==='free')||localStorage.getItem(k+"_unlocked")==="true";let dl=getDaysLeft(k);let d=document.createElement("div");d.className=`shop-item ${u?'unlocked':'locked'} ${activeFoodSkin===f.name?'active-skin':''}`;d.innerHTML=`<div style="width:16px;height:16px;background:${f.color};border-radius:50%;margin:0 auto 3px auto;border:1px solid #fff;"></div><b>${f.name}</b><br>${u?(dl?dl+'d':'Owned'):(f.type==='perm'?'100k':f.days+'d')}`;d.onclick=()=>{if(u){activeFoodSkin=f.name;localStorage.setItem("active_food",f.name);renderFoodShop();}else handleShopPurchase(f,k,()=>renderFoodShop());};g.appendChild(d);});}
+function handleShopPurchase(it,k,cb){let desc=it.type==='perm'?`Permanent = ${it.price} Coins`:`${it.days} days = Ad + ${it.price}`;showModal("Unlock "+it.name, desc, ()=>{if(coins<it.price){alert("Need "+it.price);return;}showRewardedAd(()=>{if(it.price>0)coins-=it.price;localStorage.setItem(k+"_unlocked","true");if(it.days<9999)localStorage.setItem(k+"_expire", Date.now()+(it.days*86400000));updateUI();closeModal();cb();playEatSound();});}, "Cancel");}
+function showModal(t,d,cb,ct="Cancel"){document.getElementById("modalTitle").innerText=t; document.getElementById("modalDesc").innerText=d; let ab=document.getElementById("modalActionBtn"); let cb2=document.getElementById("modalCancelBtn"); if(t.includes("Game Over")){ab.style.display="none"; cb2.innerText=ct; cb2.onclick=cb;} else{ab.style.display="block"; ab.innerText=t.includes("Buy")?"Buy Permanent":"Watch Ad"; ab.onclick=cb; cb2.innerText=ct; cb2.onclick=closeModal;} document.getElementById("modalOverlay").classList.add("show");}
+function closeModal(){document.getElementById("modalOverlay").classList.remove("show");}
+
+const canvas=document.getElementById("gameCanvas"); const ctx=canvas.getContext("2d"); const box=15;
+let snake=[{x:60,y:60},{x:45,y:60},{x:30,y:60}]; let food={x:0,y:0}; let dir="RIGHT"; let nextDir="RIGHT"; let paused=true; let over=false; let started=false;
+
+function spawnFood(){food={x:Math.floor(Math.random()*(canvas.width/box))*box, y:Math.floor(Math.random()*(canvas.height/box))*box};}
+spawnFood();
+function changeDir(d){if(!started)initAudio(); if(d==="LEFT"&&dir!=="RIGHT")nextDir="LEFT"; else if(d==="UP"&&dir!=="DOWN")nextDir="UP"; else if(d==="RIGHT"&&dir!=="LEFT")nextDir="RIGHT"; else if(d==="DOWN"&&dir!=="UP")nextDir="DOWN";}
+function togglePause(){initAudio(); if(!started){started=true;paused=false;over=false;document.getElementById("okBtn").innerText="||";return;} if(over){restartGame();return;} paused=!paused; document.getElementById("okBtn").innerText=paused?"OK":"||";}
+function restartGame(){snake=[{x:60,y:60},{x:45,y:60},{x:30,y:60}];dir="RIGHT";nextDir="RIGHT";over=false;paused=true;started=false;document.getElementById("okBtn").innerText="OK";spawnFood();}
+function checkSelf(x,y){for(let i=0;i<snake.length;i++)if(snake[i].x===x&&snake[i].y===y)return true; return false;}
+
+function draw(){
+  ctx.fillStyle="#05050a"; ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.strokeStyle="#111"; ctx.lineWidth=0.5;
+  for(let i=0;i<canvas.width;i+=box){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,canvas.height);ctx.stroke();}
+  for(let i=0;i<canvas.height;i+=box){ctx.beginPath();ctx.moveTo(0,i);ctx.lineTo(canvas.width,i);ctx.stroke();}
+  let fO=foodList.find(f=>f.name===activeFoodSkin); ctx.fillStyle=fO?fO.color:"#fff"; ctx.shadowColor=fO?fO.color:"#fff"; ctx.shadowBlur=10; ctx.beginPath(); ctx.arc(food.x+box/2, food.y+box/2, box/2-1.2,0,Math.PI*2); ctx.fill(); ctx.shadowBlur=0;
+  let sO=snakeList.find(s=>s.name===activeSnakeSkin);
+  for(let i=0;i<snake.length;i++){
+    let cx=snake[i].x+box/2, cy=snake[i].y+box/2;
+    if(i===0){ctx.fillStyle="#ff0"; ctx.shadowColor="#ff0"; ctx.shadowBlur=8; ctx.beginPath(); ctx.arc(cx,cy,box/2,0,Math.PI*2); ctx.fill(); ctx.shadowBlur=0; ctx.fillStyle="#000"; ctx.beginPath(); ctx.arc(cx-1.5,cy-1.5,1.5,0,Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.arc(cx+1.5,cy-1.5,1.5,0,Math.PI*2); ctx.fill();}
+    else{ctx.fillStyle=sO?sO.color:"#00ff88"; ctx.beginPath(); ctx.arc(cx,cy,box/2-1,0,Math.PI*2); ctx.fill(); if(i>0){ctx.strokeStyle="rgba(0,0,0,0.4)"; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(snake[i-1].x+box/2,snake[i-1].y+box/2); ctx.lineTo(cx,cy); ctx.stroke();}}
+  }
+  if(over||paused){ctx.fillStyle="rgba(0,0,0,0.78)"; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.fillStyle="#ff0"; ctx.font="bold 12px monospace"; ctx.textAlign="center"; let msg=paused&&started?"PAUSED - Press OK":(over?"GAME OVER - Press OK":"Press OK to START"); ctx.fillText(msg,canvas.width/2,canvas.height/2); ctx.textAlign="left"; return;}
+  dir=nextDir; let sx=snake[0].x, sy=snake[0].y; if(dir==="LEFT")sx-=box; if(dir==="UP")sy-=box; if(dir==="RIGHT")sx+=box; if(dir==="DOWN")sy+=box;
+  if(sx<0||sx>=canvas.width||sy<0||sy>=canvas.height||checkSelf(sx,sy)){
+    over=true; playGameOverSound(); gameOverCount++; localStorage.setItem("game_over_count",gameOverCount);
+    let cd=gameOverCount%3;
+    if(cd===0){showModal("🐍 SGS Revive? 3/3","Score: "+(snake.length-3)+"\nWatch Ad to Continue?", ()=>{showRewardedAd(()=>{over=false;paused=false;let tmp=[{x:60,y:60}];for(let i=1;i<snake.length;i++)tmp.push({x:60-(i*box),y:60});snake=tmp;dir="RIGHT";nextDir="RIGHT";closeModal();});}, "Restart");}
+    else{showModal("Game Over!","Score: "+(snake.length-3)+" | Death "+cd+"/3", ()=>{restartGame();closeModal();}, "Restart");}
+    document.getElementById("okBtn").innerText="OK"; return;
+  }
+  if(sx===food.x&&sy===food.y){playEatSound();coins+=10;let bk="level_"+activeLevel+"_best";let best=parseInt(localStorage.getItem(bk)||"0");let eaten=snake.length-2;if(eaten>best)localStorage.setItem(bk,eaten);updateUI();spawnFood();}else snake.pop();
+  snake.unshift({x:sx,y:sy});
+}
+
+let gameLoop;
+function startGameLoop(){
+  if(gameLoop) clearInterval(gameLoop);
+  let speed=levelSpeeds[activeLevel]||120;
+  gameLoop=setInterval(draw, speed);
+}
+startGameLoop();
+updateUI();
+</script>
+</body>
+</html>
